@@ -1,12 +1,17 @@
-from sugar.activity import activity
-import logging
-import hulahop
-from sugar import env
-import sys, os
-import gtk
-hulahop.startup(os.path.join(env.get_profile_path(), 'gecko'))	
-from hulahop.webview import WebView
-from sugar.graphics.toolbutton import ToolButton
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from gi.repository import Gtk
+from gi.repository import WebKit
+from gi.repository.WebKit import WebView
+
+from sugar3.activity import activity
+from sugar3.activity.widgets import StopButton
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.toolbarbox import ToolbarButton
+
 
 class T2Activity(activity.Activity):
     def xois_clicked(self, widget, data=None):
@@ -17,7 +22,7 @@ class T2Activity(activity.Activity):
 
     def back_clicked(self, widget, data=None):
         if self.webview.get_web_navigation().canGoBack:
-		self.webview.get_web_navigation().goBack()
+            self.webview.get_web_navigation().goBack()
 
     def home_clicked(self, widget, data=None):
         self.webview.load_uri('http://147.47.120.20/~tsquare/menu.php')
@@ -29,22 +34,24 @@ class T2Activity(activity.Activity):
 
         self.set_title('Teach Teacher')
 
-        toolbox = activity.ActivityToolbox(self)
-        self.set_toolbox(toolbox)
-	toolbar = gtk.Toolbar()	
+        toolbarbox = ToolbarBox()
+        self.set_toolbar_box(toolbarbox)
+
+        toolbar = Gtk.Toolbar()
+
+        button = ActivityToolbarButton(self)
+        toolbarbox.toolbar.insert(button, -1)
 
         self.goBack = ToolButton('go-left')
         self.goBack.set_tooltip("Go Back")
         self.goBack.connect('clicked', self.back_clicked)
         toolbar.insert(self.goBack, -1)
-        self.goBack.show()
 
         self.home = ToolButton('go-home')
         self.home.set_tooltip("Home")
         self.home.connect('clicked', self.home_clicked)
         toolbar.insert(self.home, -1)
-        self.home.show()
-	
+
         self.xois = ToolButton('computer-xo')
         self.xois.set_tooltip("T's XO")
         self.xois.connect('clicked', self.xois_clicked)
@@ -57,16 +64,27 @@ class T2Activity(activity.Activity):
         # toolbar.insert(self.guide, -1)
         # self.guide.show()
 
+        toolbarbox.toolbar.insert(ToolbarButton(page=toolbar, icon_name='toolbar-edit'), -1)
 
-	toolbar.show()
-	toolbox.add_toolbar("Menu", toolbar)
-        toolbox.show()
-        
+        separator = Gtk.SeparatorToolItem()
+        separator.props.draw = False
+        separator.set_expand(True)
+        toolbarbox.toolbar.insert(separator, -1)
+
+        stop_button = StopButton(self)
+        toolbarbox.toolbar.insert(stop_button, -1)
+
+        scroll = Gtk.ScrolledWindow()
+        self.set_canvas(scroll)
+
         self.webview = WebView()
-	self.set_canvas(self.webview)
-        self.webview.show()
         self.webview.load_uri('http://147.47.120.20/~tsquare/menu.php')
+        scroll.add(self.webview)
 
+        toolbar.show_all()
+        toolbarbox.show_all()
+        toolbarbox.toolbar.show_all()
+        self.show_all()
 
-    
         print "AT END OF THE CLASS"
+
