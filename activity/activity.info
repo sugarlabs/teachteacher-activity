@@ -1,7 +1,7 @@
 [Activity]
 name = TeachTeacher
-service_name = ee.shinv.T2Activity
-class = t2.T2Activity
+bundle_id = ee.shinv.T2Activity
+exec = sugar-activity t2.T2Activity
 icon = activity-t2
 activity_version = 3
 show_launcher = yes
