@@ -31,9 +31,9 @@ class T2Activity(activity.Activity):
         self.webview.load_uri('http://147.47.120.20/~tsquare/menu.php')
 
     def __init__(self, handle):
-        print "running activity init", handle
+        print("running activity init", handle)
         activity.Activity.__init__(self, handle)
-        print "activity running"
+        print("activity running")
 
         self.set_title('Teach Teacher')
 
@@ -89,5 +89,5 @@ class T2Activity(activity.Activity):
         toolbarbox.toolbar.show_all()
         self.show_all()
 
-        print "AT END OF THE CLASS"
+        print("AT END OF THE CLASS")
 
